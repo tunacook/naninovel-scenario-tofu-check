@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {doTofuCheck} from './TofuCheck'
+import { doTofuCheck } from './TofuCheck'
 
 function run(): void {
   try {
