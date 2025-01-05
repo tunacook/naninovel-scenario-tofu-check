@@ -30,7 +30,7 @@ export function checkByLine(lines: string[], fileName:string, characterContent: 
         for (const missingChar of missingChars) {
             core.error(`ERROR: '${missingChar}' is not found in characterContent by ${fileName}`);
         }
-        throw new Error(missingChars.join('\n'));
+        throw new Error(`ERROR: Not found characters:\n ${missingChars.join(' / ')}`);
     }
     return {
         isAllIncluded: missingChars.length === 0,
