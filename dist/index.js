@@ -25661,8 +25661,11 @@ function checkByLine(lines, fileName, characterContent) {
             }
         }
     }
-    for (const missingChar of missingChars) {
-        core.error(`ERROR: '${missingChar}' is not found in ${fileName}`);
+    if (missingChars.length > 0) {
+        for (const missingChar of missingChars) {
+            core.error(`ERROR: '${missingChar}' is not found in ${fileName}`);
+        }
+        throw new Error(missingChars.join('\n'));
     }
     return {
         isAllIncluded: missingChars.length === 0,
