@@ -1,0 +1,9 @@
+{
+  "name": "naninovel-atlas-tofu-check",
+  "version": "0.0.0",
+  "description": "NaninovelのシナリオファイルにおいてTextMeshProのFontAtlasに含まれていない文字があるかどうかチェックする",
+  "main": "index.ts",
+  "repository": "git@github.com:tunacook/naninovel-atlas-tofu-check.git",
+  "author": "tunacook <tunacook0704@gmail.com>",
+  "license": "MIT"
+}
