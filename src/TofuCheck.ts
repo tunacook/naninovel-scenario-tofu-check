@@ -40,10 +40,6 @@ export function doTofuCheck(
     const charactersFileFullPath = path.join(workspace, charactersFilePath);
     // const scenarioFileDirectoryFullPath = path.join(workspace, scenarioFileDirectoryPath);
 
-    // 2. ファイル or ディレクトリかチェック
-
     readContent(charactersFileFullPath);
-
-
     return `doTofuCheck charactersFilePath:${charactersFilePath} scenarioFileDirectoryPath:${scenarioFileDirectoryPath} `;
 }

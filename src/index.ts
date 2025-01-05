@@ -1,5 +1,4 @@
 import * as core from '@actions/core'
-import {hello} from './hello'
 import {doTofuCheck} from './TofuCheck'
 
 function run(): void {
