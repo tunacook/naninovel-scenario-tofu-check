@@ -25641,22 +25641,33 @@ module.exports = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.checkByLine = checkByLine;
 exports.doTofuCheck = doTofuCheck;
 const fs = __nccwpck_require__(9896);
 const path = __nccwpck_require__(6928);
 const core = __nccwpck_require__(7484);
-// シナリオファイルを1行ずつ読み込む
-// 行に対して
 function checkByLine(lines, fileName, characterContent) {
+    const missingChars = [];
     for (const line of lines) {
         if (!line)
             continue;
         // TODO: コメント、スクリプト部分はスキップする
         // TODO: ローカライズ対応、IDをスキップする https://naninovel.com/ja/guide/localization#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%A9%E3%82%A4%E3%82%B9%E3%82%99
-        if (!characterContent.includes(line)) {
-            core.error(`ERROR: '${line}' is not found in ${fileName}`);
+        for (const char of [...line]) {
+            if (missingChars.includes(char))
+                continue;
+            if (!characterContent.includes(char)) {
+                missingChars.push(char);
+            }
         }
     }
+    for (const missingChar of missingChars) {
+        core.error(`ERROR: '${missingChar}' is not found in ${fileName}`);
+    }
+    return {
+        isAllIncluded: missingChars.length === 0,
+        missingChars,
+    };
 }
 function checkScenarioContent(fullPath, characterContent) {
     const stats = fs.statSync(fullPath);
