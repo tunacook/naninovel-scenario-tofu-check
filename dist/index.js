@@ -25665,7 +25665,7 @@ function checkByLine(lines, fileName, characterContent) {
         for (const missingChar of missingChars) {
             core.error(`ERROR: '${missingChar}' is not found in characterContent by ${fileName}`);
         }
-        throw new Error(missingChars.join('\n'));
+        throw new Error(`ERROR: Not found characters:\n ${missingChars.join(' / ')}`);
     }
     return {
         isAllIncluded: missingChars.length === 0,
@@ -25706,7 +25706,7 @@ function readCharacterContent(fullPath) {
     // TODO: coreでない方法でログを出す
     // TODO: 特定の拡張子だけ読む
     if (stats.isDirectory()) {
-        core.error("Specify file paths, not directories");
+        core.error('Specify file paths, not directories');
         return '';
     }
     if (stats.isFile()) {
