@@ -25645,27 +25645,39 @@ exports.doTofuCheck = doTofuCheck;
 const fs = __nccwpck_require__(9896);
 const path = __nccwpck_require__(6928);
 const core = __nccwpck_require__(7484);
-function readContent(fullPath) {
+// シナリオファイルを1行ずつ読み込む
+// 行に対して
+function checkByLine(lines, fileName, characterContent) {
+    for (const line of lines) {
+        if (!line)
+            continue;
+        // TODO: コメント、スクリプト部分はスキップする
+        // TODO: ローカライズ対応、IDをスキップする https://naninovel.com/ja/guide/localization#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%A9%E3%82%A4%E3%82%B9%E3%82%99
+        if (!characterContent.includes(line)) {
+            core.error(`ERROR: '${line}' is not found in ${fileName}`);
+        }
+    }
+}
+function checkScenarioContent(fullPath, characterContent) {
     const stats = fs.statSync(fullPath);
     // TODO: coreでない方法でログを出す
     if (stats.isFile()) {
-        // (A) ファイルなら1つだけ読む
+        // ファイルなら1つだけ読む
         core.info(`'${fullPath}' is a file, reading content...`);
-        const content = fs.readFileSync(fullPath, 'utf-8');
-        core.info(`[File: ${fullPath}]`);
-        core.info(content);
+        checkByLine(fs.readFileSync(fullPath, 'utf-8').split(/\r?\n/), fullPath, characterContent);
     }
     else if (stats.isDirectory()) {
-        // (B) ディレクトリなら中のファイルすべてを読む
+        // ディレクトリなら中のファイルすべてを読む
         core.info(`'${fullPath}' is a directory, reading all files...`);
         const entries = fs.readdirSync(fullPath, { withFileTypes: true });
         for (const entry of entries) {
             // ディレクトリの中の各エントリ
             if (entry.isFile()) {
                 const filePath = path.join(fullPath, entry.name);
-                const content = fs.readFileSync(filePath, 'utf-8');
-                core.info(`[File: ${path.join(fullPath, entry.name)}]`);
-                core.info(content);
+                // const content = fs.readFileSync(filePath, 'utf-8');
+                // core.info(`[File: ${path.join(fullPath, entry.name)}]`);
+                // core.info(content);
+                checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent);
             }
         }
     }
@@ -25673,13 +25685,36 @@ function readContent(fullPath) {
         // シンボリックリンク・特殊ファイルなどはここにくる
         core.warning(`'${fullPath}' is neither a regular file nor a directory.`);
     }
+    return [];
+}
+function readCharacterContent(fullPath) {
+    const stats = fs.statSync(fullPath);
+    // TODO: coreでない方法でログを出す
+    // TODO: 特定の拡張子だけ読む
+    if (stats.isDirectory()) {
+        core.error("Specify file paths, not directories");
+        return '';
+    }
+    if (stats.isFile()) {
+        // (A) ファイルなら1つだけ読む
+        core.info(`'${fullPath}' is a file, reading content...`);
+        const content = fs.readFileSync(fullPath, 'utf-8');
+        core.info(content);
+        return content;
+    }
+    else {
+        // シンボリックリンク・特殊ファイルなど
+        core.warning(`'${fullPath}' is neither a regular file nor a directory.`);
+        return '';
+    }
 }
 function doTofuCheck(charactersFilePath, scenarioFileDirectoryPath) {
     const workspace = process.env.GITHUB_WORKSPACE || '';
     const charactersFileFullPath = path.join(workspace, charactersFilePath);
     const scenarioFileDirectoryFullPath = path.join(workspace, scenarioFileDirectoryPath);
-    readContent(charactersFileFullPath);
-    readContent(scenarioFileDirectoryFullPath);
+    const characterContent = readCharacterContent(charactersFileFullPath);
+    checkScenarioContent(scenarioFileDirectoryFullPath, characterContent);
+    // TODO: 結果をスタックしてまとめてresultとして出すようにする
     return `doTofuCheck charactersFilePath:${charactersFilePath} scenarioFileDirectoryPath:${scenarioFileDirectoryPath} `;
 }
 
