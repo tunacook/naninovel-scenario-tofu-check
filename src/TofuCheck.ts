@@ -6,16 +6,32 @@ import * as core from '@actions/core'
 // シナリオファイルを1行ずつ読み込む
 // 行に対して
 
-function checkByLine(lines: string[], fileName:string, characterContent: string) {
+interface checkResult {
+    isAllIncluded: boolean
+    missingChars: string[]
+}
+
+export function checkByLine(lines: string[], fileName:string, characterContent: string): checkResult {
+    const missingChars: string[] = [];
     for (const line of lines) {
         if (!line) continue;
 
         // TODO: コメント、スクリプト部分はスキップする
         // TODO: ローカライズ対応、IDをスキップする https://naninovel.com/ja/guide/localization#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%A9%E3%82%A4%E3%82%B9%E3%82%99
 
-        if (!characterContent.includes(line)) {
-            core.error(`ERROR: '${line}' is not found in ${fileName}`);
+        for (const char of [...line]) {
+            if (missingChars.includes(char)) continue;
+            if (!characterContent.includes(char)) {
+                missingChars.push(char);
+            }
         }
+    }
+    for (const missingChar of missingChars) {
+        core.error(`ERROR: '${missingChar}' is not found in ${fileName}`);
+    }
+    return {
+        isAllIncluded: missingChars.length === 0,
+        missingChars,
     }
 }
 
