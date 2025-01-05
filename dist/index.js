@@ -25635,15 +25635,51 @@ module.exports = {
 
 /***/ }),
 
-/***/ 867:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ 187:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.hello = hello;
-function hello(name) {
-    return `Hello ${name}! `;
+exports.doTofuCheck = doTofuCheck;
+const fs = __nccwpck_require__(9896);
+const path = __nccwpck_require__(6928);
+const core = __nccwpck_require__(7484);
+function readContent(fullPath) {
+    const stats = fs.statSync(fullPath);
+    // TODO: coreでない方法でログを出す
+    if (stats.isFile()) {
+        // (A) ファイルなら1つだけ読む
+        core.info(`'${fullPath}' is a file, reading content...`);
+        const content = fs.readFileSync(fullPath, 'utf-8');
+        core.info(`[File: ${fullPath}]`);
+        core.info(content);
+    }
+    else if (stats.isDirectory()) {
+        // (B) ディレクトリなら中のファイルすべてを読む
+        core.info(`'${fullPath}' is a directory, reading all files...`);
+        const entries = fs.readdirSync(fullPath, { withFileTypes: true });
+        for (const entry of entries) {
+            // ディレクトリの中の各エントリ
+            if (entry.isFile()) {
+                const filePath = path.join(fullPath, entry.name);
+                const content = fs.readFileSync(filePath, 'utf-8');
+                core.info(`[File: ${path.join(fullPath, entry.name)}]`);
+                core.info(content);
+            }
+        }
+    }
+    else {
+        // シンボリックリンク・特殊ファイルなどはここにくる
+        core.warning(`'${fullPath}' is neither a regular file nor a directory.`);
+    }
+}
+function doTofuCheck(charactersFilePath, scenarioFileDirectoryPath) {
+    const workspace = process.env.GITHUB_WORKSPACE || '';
+    const charactersFileFullPath = path.join(workspace, charactersFilePath);
+    // const scenarioFileDirectoryFullPath = path.join(workspace, scenarioFileDirectoryPath);
+    readContent(charactersFileFullPath);
+    return `doTofuCheck charactersFilePath:${charactersFilePath} scenarioFileDirectoryPath:${scenarioFileDirectoryPath} `;
 }
 
 
@@ -27560,16 +27596,17 @@ var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __nccwpck_require__(7484);
-const hello_1 = __nccwpck_require__(867);
+const TofuCheck_1 = __nccwpck_require__(187);
 function run() {
     try {
-        const name = core.getInput('name');
-        const helloMessage = (0, hello_1.hello)(name);
-        core.info(helloMessage);
+        const charactersFilePath = core.getInput('charactersFilePath');
+        const scenarioFileDirectoryPath = core.getInput('scenarioFileDirectoryPath');
+        const doMessage = (0, TofuCheck_1.doTofuCheck)(charactersFilePath, scenarioFileDirectoryPath);
+        core.info(doMessage);
     }
-    catch (error) {
-        if (error instanceof Error)
-            core.setFailed(error.message);
+    catch (e) {
+        if (e instanceof Error)
+            core.setFailed(e.message);
     }
 }
 run();
