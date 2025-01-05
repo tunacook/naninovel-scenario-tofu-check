@@ -25677,8 +25677,9 @@ function readContent(fullPath) {
 function doTofuCheck(charactersFilePath, scenarioFileDirectoryPath) {
     const workspace = process.env.GITHUB_WORKSPACE || '';
     const charactersFileFullPath = path.join(workspace, charactersFilePath);
-    // const scenarioFileDirectoryFullPath = path.join(workspace, scenarioFileDirectoryPath);
+    const scenarioFileDirectoryFullPath = path.join(workspace, scenarioFileDirectoryPath);
     readContent(charactersFileFullPath);
+    readContent(scenarioFileDirectoryFullPath);
     return `doTofuCheck charactersFilePath:${charactersFilePath} scenarioFileDirectoryPath:${scenarioFileDirectoryPath} `;
 }
 
