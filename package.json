@@ -6,7 +6,7 @@
   "scripts": {
     "build": "ncc build src/index.ts -o dist",
     "lint": "yarn eslint && yarn prettier",
-    "lint-fix": "yarn eslint-fix && yarn prettier-fix",
+    "lint-fix": "yarn eslint --fix && yarn prettier-fix",
     "prettier-fix": "prettier --write \"./**/*.{ts,js,vue,css}\"",
     "prettier": "prettier --check \"./**/*.{ts,js,vue,css}\"",
     "test": "yarn jest"
