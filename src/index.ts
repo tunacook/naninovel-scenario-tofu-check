@@ -6,10 +6,6 @@ function run(): void {
     const charactersFilePath: string = core.getInput('charactersFilePath')
     const scenarioFileDirectoryPath: string = core.getInput('scenarioFileDirectoryPath')
     const doMessage: string = doTofuCheck(charactersFilePath, scenarioFileDirectoryPath)
-
-
-
-
     core.info(doMessage)
   } catch (e) {
     if (e instanceof Error) core.setFailed(e.message)
