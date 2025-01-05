@@ -1,10 +1,14 @@
 name: 'tofu check'
 description: 'NaninovelのシナリオファイルにおいてTextMeshProのFontAtlasに含まれていない文字があるかどうかチェックする'
 inputs:
-  name:
-    description: 'greeting'
+  charactersFilePath:
+    description: 'atlas characters file path'
     required: true
-    default: 'hoge'
+    default: ""
+  scenarioFileDirectoryPath:
+    description: 'scenario file directory path'
+    required: true
+    default: ""
 runs:
   using: 'node20'
   main: 'dist/index.js'
