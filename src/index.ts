@@ -1,14 +1,19 @@
 import * as core from '@actions/core'
 import {hello} from './hello'
+import {doTofuCheck} from './TofuCheck'
 
 function run(): void {
   try {
-    const name: string = core.getInput('name')
-    const helloMessage: string = hello(name)
+    const charactersFilePath: string = core.getInput('charactersFilePath')
+    const scenarioFileDirectoryPath: string = core.getInput('scenarioFileDirectoryPath')
+    const doMessage: string = doTofuCheck(charactersFilePath, scenarioFileDirectoryPath)
 
-    core.info(helloMessage)
-  } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message)
+
+
+
+    core.info(doMessage)
+  } catch (e) {
+    if (e instanceof Error) core.setFailed(e.message)
   }
 }
 
