@@ -1,13 +1,10 @@
-name: 'naninovel-atlas-tofu-check'
+name: 'tofu check'
 description: 'NaninovelのシナリオファイルにおいてTextMeshProのFontAtlasに含まれていない文字があるかどうかチェックする'
 inputs:
-  test-inputs:
-    description: "inputsのテスト"
+  name:
+    description: 'greeting'
     required: true
-    default: "foo"
-outputs:
-  test-output:
-    description: 'outputsのテスト'
+    default: 'hoge'
 runs:
   using: 'node22'
   main: 'dist/index.js'
