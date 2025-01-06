@@ -1,9 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as core from '@actions/core'
-
-// シナリオファイルを1行ずつ読み込む
-// 行に対して
+import { isSkipNaninovelSyntax } from './naninovel'
 
 interface checkResult {
   isAllIncluded: boolean
@@ -14,12 +12,9 @@ export function checkByLine(lines: string[], fileName: string, characterContent:
   const missingChars: string[] = []
   for (const line of lines) {
     if (!line) continue
-
-    // TODO: コメント、スクリプト部分はスキップする
-    // TODO: ローカライズ対応、IDをスキップする https://naninovel.com/ja/guide/localization#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%A9%E3%82%A4%E3%82%B9%E3%82%99
-
     for (const char of [...line]) {
       if (missingChars.includes(char)) continue
+      if (isSkipNaninovelSyntax(char)) continue
       if (!characterContent.includes(char)) {
         missingChars.push(char)
       }
