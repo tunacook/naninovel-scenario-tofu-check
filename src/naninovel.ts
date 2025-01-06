@@ -1,3 +1,13 @@
+// https://naninovel.com/ja/guide/naninovel-scripts
+
+/**
+ * Naninovelのラベル構文であるかどうか
+ * @param line
+ */
+function isLabelLine(line: string): boolean {
+  return line.trimStart().startsWith('#')
+}
+
 /**
  * Naninovelのスクリプト構文であるかどうか
  * @param line
@@ -21,5 +31,6 @@ function isCommentLine(line: string): boolean {
  */
 export function isSkipNaninovelSyntax(line: string): boolean {
   if (isCommandLine(line)) return true
-  return isCommentLine(line)
+  if (isCommentLine(line)) return true
+  return isLabelLine(line)
 }
