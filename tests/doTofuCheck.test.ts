@@ -6,4 +6,16 @@ describe('checkByLine test', () => {
     const res = () => checkByLine(['aaa', 'bbb', 'ccc'], 'filename', characterContent)
     expect(res).toThrow(new Error('ERROR: Not found characters:\n b / c'))
   })
+
+  test('コメント部分はスキップ', async () => {
+    const characterContent = 'adf'
+    const res = () => checkByLine(['aaa', ';bbb', 'ccc'], 'filename', characterContent)
+    expect(res).toThrow(new Error('ERROR: Not found characters:\n b / c'))
+  })
+
+  test('スクリプト部分はスキップ', async () => {
+    const characterContent = 'adf'
+    const res = () => checkByLine(['aaa', '@bbb', 'ccc'], 'filename', characterContent)
+    expect(res).toThrow(new Error('ERROR: Not found characters:\n b / c'))
+  })
 })
