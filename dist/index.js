@@ -25646,13 +25646,14 @@ exports.doTofuCheck = doTofuCheck;
 const fs = __nccwpck_require__(9896);
 const path = __nccwpck_require__(6928);
 const core = __nccwpck_require__(7484);
+const naninovel_1 = __nccwpck_require__(7153);
 function checkByLine(lines, fileName, characterContent) {
     const missingChars = [];
     for (const line of lines) {
         if (!line)
             continue;
-        // TODO: コメント、スクリプト部分はスキップする
-        // TODO: ローカライズ対応、IDをスキップする https://naninovel.com/ja/guide/localization#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%A9%E3%82%A4%E3%82%B9%E3%82%99
+        if ((0, naninovel_1.isSkipNaninovelSyntax)(line))
+            continue;
         for (const char of [...line]) {
             if (missingChars.includes(char))
                 continue;
@@ -25730,6 +25731,50 @@ function doTofuCheck(charactersFilePath, scenarioFileDirectoryPath) {
     checkScenarioContent(scenarioFileDirectoryFullPath, characterContent);
     // TODO: 結果をスタックしてまとめてresultとして出すようにする
     return `doTofuCheck charactersFilePath:${charactersFilePath} scenarioFileDirectoryPath:${scenarioFileDirectoryPath} `;
+}
+
+
+/***/ }),
+
+/***/ 7153:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// https://naninovel.com/ja/guide/naninovel-scripts
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isSkipNaninovelSyntax = isSkipNaninovelSyntax;
+/**
+ * Naninovelのラベル構文であるかどうか
+ * @param line
+ */
+function isLabelLine(line) {
+    return line.trimStart().startsWith('#');
+}
+/**
+ * Naninovelのスクリプト構文であるかどうか
+ * @param line
+ */
+function isCommandLine(line) {
+    return line.trimStart().startsWith('@');
+}
+/**
+ * Naninovelのコメント構文であるかどうか
+ * @param line
+ */
+function isCommentLine(line) {
+    return line.trimStart().startsWith(';');
+}
+// TODO: ローカライズ対応、IDをスキップする https://naninovel.com/ja/guide/localization#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%A9%E3%82%A4%E3%82%B9%E3%82%99
+/**
+ * Naninovelの構文であるかどうか Naninovel構文であればスキップする
+ */
+function isSkipNaninovelSyntax(line) {
+    if (isCommandLine(line))
+        return true;
+    if (isCommentLine(line))
+        return true;
+    return isLabelLine(line);
 }
 
 
