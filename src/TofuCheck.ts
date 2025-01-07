@@ -12,6 +12,10 @@ export function checkByLine(lines: string[], fileName: string, characterContent:
   const missingChars: string[] = []
   for (const line of lines) {
     if (!line) continue
+
+    core.info('-------')
+    core.info(line)
+    core.info('-------')
     if (isSkipNaninovelSyntax(line)) continue
     for (const char of [...line]) {
       if (missingChars.includes(char)) continue

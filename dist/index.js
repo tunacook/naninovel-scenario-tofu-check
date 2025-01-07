@@ -25652,6 +25652,9 @@ function checkByLine(lines, fileName, characterContent) {
     for (const line of lines) {
         if (!line)
             continue;
+        core.info('-------');
+        core.info(line);
+        core.info('-------');
         if ((0, naninovel_1.isSkipNaninovelSyntax)(line))
             continue;
         for (const char of [...line]) {
