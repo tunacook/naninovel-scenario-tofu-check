@@ -1,0 +1,42 @@
+name: Build and commit artifacts on PR merge
+
+# PRのマージ時にyarn build成果物をpushする
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  build_and_commit:
+    # pull_request がクローズされたときにイベントが発火するが、
+    # 実際にマージされた（merged == true）場合のみ処理を実行
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build project
+        run: yarn build
+
+      - name: Commit build artifacts
+        run: |
+          # GitHub Actions 用botのユーザー名・メールアドレス設定
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # dist ディレクトリなど、ビルド成果物をステージング
+          git add dist
+
+          # 変更があればコミット & プッシュ
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "chore: build artifacts [skip ci]"
+            # プルリクエストのマージ先ブランチ (base.ref) にプッシュ
+            git push origin HEAD:${{ github.event.pull_request.base.ref }}
+          else
+            echo "No changes to commit."
