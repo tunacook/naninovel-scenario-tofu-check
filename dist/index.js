@@ -25681,6 +25681,8 @@ function checkScenarioContent(fullPath, characterContent) {
     const stats = fs.statSync(fullPath);
     // TODO: coreでない方法でログを出す
     if (stats.isFile()) {
+        if (!(0, naninovel_1.isExtNani)(fullPath))
+            return [];
         // ファイルなら1つだけ読む
         core.info(`'${fullPath}' is a file, reading content...`);
         checkByLine(fs.readFileSync(fullPath, 'utf-8').split(/\r?\n/), fullPath, characterContent);
@@ -25692,6 +25694,8 @@ function checkScenarioContent(fullPath, characterContent) {
         for (const entry of entries) {
             // ディレクトリの中の各エントリ
             if (entry.isFile()) {
+                if (!(0, naninovel_1.isExtNani)(fullPath))
+                    continue;
                 const filePath = path.join(fullPath, entry.name);
                 checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent);
             }
@@ -25738,14 +25742,17 @@ function doTofuCheck(charactersFilePath, scenarioFileDirectoryPath) {
 /***/ }),
 
 /***/ 7153:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-// https://naninovel.com/ja/guide/naninovel-scripts
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isExtNani = isExtNani;
 exports.trimAuthor = trimAuthor;
 exports.isSkipNaninovelSyntax = isSkipNaninovelSyntax;
+const path = __nccwpck_require__(6928);
+const ALLOWED_EXTENSIONS = ['.nani'];
+// https://naninovel.com/ja/guide/naninovel-scripts
 /**
  * Naninovelのラベル構文であるかどうか
  * @param line
@@ -25766,6 +25773,9 @@ function isCommandLine(line) {
  */
 function isCommentLine(line) {
     return line.trimStart().startsWith(';');
+}
+function isExtNani(fullPath) {
+    return ALLOWED_EXTENSIONS.includes(path.extname(fullPath).toLowerCase());
 }
 /**
  * セリフ構文の場合に話者IDを除外してセリフ文章だけを返す セリフ構文でない場合はなにもしない
