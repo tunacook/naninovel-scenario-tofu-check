@@ -25680,6 +25680,7 @@ function checkByLine(lines, fileName, characterContent) {
 function checkScenarioContent(fullPath, characterContent) {
     const stats = fs.statSync(fullPath);
     // TODO: coreでない方法でログを出す
+    core.info(`stats.isDirectory(): ${stats.isDirectory()}`);
     if (stats.isFile()) {
         if (!(0, naninovel_1.isExtNani)(fullPath))
             return [];
@@ -25690,13 +25691,24 @@ function checkScenarioContent(fullPath, characterContent) {
     else if (stats.isDirectory()) {
         // ディレクトリなら中のファイルすべてを読む
         core.info(`'${fullPath}' is a directory, reading all files...`);
+        //TODO: directoryだけの時にその中のファイル見てない
         const entries = fs.readdirSync(fullPath, { withFileTypes: true });
+        core.info(`entries: ${entries}`);
+        core.info(`entries_len: ${entries.length} entries`);
         for (const entry of entries) {
             // ディレクトリの中の各エントリ
             if (entry.isFile()) {
-                if (!(0, naninovel_1.isExtNani)(fullPath))
-                    continue;
+                core.info('==========');
+                core.info(`entry: ${entry}`);
+                core.info(`entry.isFile(): ${entry.isFile()}`);
+                core.info(`name: ${entry.name}`);
+                core.info(`fullPath: ${fullPath}`);
+                core.info(`isExtNani(fullPath): ${(0, naninovel_1.isExtNani)(fullPath)}`);
                 const filePath = path.join(fullPath, entry.name);
+                core.info(`filePath: ${filePath}`);
+                core.info('==========');
+                if (!(0, naninovel_1.isExtNani)(filePath))
+                    continue;
                 checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent);
             }
         }

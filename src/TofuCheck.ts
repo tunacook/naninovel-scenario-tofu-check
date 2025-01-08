@@ -42,6 +42,8 @@ function checkScenarioContent(fullPath: string, characterContent: string): Array
   const stats = fs.statSync(fullPath)
   // TODO: coreでない方法でログを出す
 
+  core.info(`stats.isDirectory(): ${stats.isDirectory()}`)
+
   if (stats.isFile()) {
     if (!isExtNani(fullPath)) return []
     // ファイルなら1つだけ読む
@@ -50,12 +52,33 @@ function checkScenarioContent(fullPath: string, characterContent: string): Array
   } else if (stats.isDirectory()) {
     // ディレクトリなら中のファイルすべてを読む
     core.info(`'${fullPath}' is a directory, reading all files...`)
+
+    //TODO: directoryだけの時にその中のファイル見てない
+
     const entries = fs.readdirSync(fullPath, { withFileTypes: true })
+    core.info(`entries: ${entries}`)
+    core.info(`entries_len: ${entries.length} entries`)
+
     for (const entry of entries) {
+
+
+
       // ディレクトリの中の各エントリ
       if (entry.isFile()) {
-        if (!isExtNani(fullPath)) continue
+        core.info('==========')
+        core.info(`entry: ${entry}`)
+
+        core.info(`entry.isFile(): ${entry.isFile()}`)
+        core.info(`name: ${entry.name}`)
+        core.info(`fullPath: ${fullPath}`)
+        core.info(`isExtNani(fullPath): ${isExtNani(fullPath)}`)
         const filePath = path.join(fullPath, entry.name)
+        core.info(`filePath: ${filePath}`)
+
+        core.info('==========')
+
+        if (!isExtNani(filePath)) continue
+
         checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent)
       }
     }
