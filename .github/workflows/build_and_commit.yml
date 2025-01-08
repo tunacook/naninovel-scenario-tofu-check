@@ -26,17 +26,12 @@ jobs:
 
       - name: Commit build artifacts
         run: |
-          # GitHub Actions 用botのユーザー名・メールアドレス設定
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # dist ディレクトリなど、ビルド成果物をステージング
           git add dist
-
-          # 変更があればコミット & プッシュ
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "chore: build artifacts [skip ci]"
-            # プルリクエストのマージ先ブランチ (base.ref) にプッシュ
             git push origin HEAD:${{ github.event.pull_request.base.ref }}
           else
             echo "No changes to commit."
+        shell: bash
