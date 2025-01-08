@@ -11,6 +11,8 @@ jobs:
     # pull_request がクローズされたときにイベントが発火するが、
     # 実際にマージされた（merged == true）場合のみ処理を実行
     if: github.event.pull_request.merged == true
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
