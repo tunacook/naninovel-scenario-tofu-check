@@ -1,6 +1,6 @@
-import * as path from 'path';
+import * as path from 'path'
 
-const ALLOWED_EXTENSIONS = [".nani"];
+const ALLOWED_EXTENSIONS = ['.nani']
 
 // https://naninovel.com/ja/guide/naninovel-scripts
 
@@ -29,9 +29,7 @@ function isCommentLine(line: string): boolean {
 }
 
 export function isExtNani(fullPath: string): boolean {
-  return ALLOWED_EXTENSIONS.includes(
-    path.extname(fullPath).toLowerCase()
-  );
+  return ALLOWED_EXTENSIONS.includes(path.extname(fullPath).toLowerCase())
 }
 
 /**
