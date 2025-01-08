@@ -25657,7 +25657,8 @@ function checkByLine(lines, fileName, characterContent) {
         core.info('-------');
         if ((0, naninovel_1.isSkipNaninovelSyntax)(line))
             continue;
-        for (const char of [...line]) {
+        const trimLine = (0, naninovel_1.trimAuthor)(line);
+        for (const char of [...trimLine]) {
             if (missingChars.includes(char))
                 continue;
             if (!characterContent.includes(char)) {
@@ -25746,6 +25747,7 @@ function doTofuCheck(charactersFilePath, scenarioFileDirectoryPath) {
 
 // https://naninovel.com/ja/guide/naninovel-scripts
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.trimAuthor = trimAuthor;
 exports.isSkipNaninovelSyntax = isSkipNaninovelSyntax;
 /**
  * Naninovelのラベル構文であるかどうか
@@ -25767,6 +25769,16 @@ function isCommandLine(line) {
  */
 function isCommentLine(line) {
     return line.trimStart().startsWith(';');
+}
+/**
+ * セリフ構文の場合に話者IDを除外してセリフ文章だけを返す セリフ構文でない場合はなにもしない
+ * @param line
+ */
+function trimAuthor(line) {
+    const colonIndex = line.indexOf(':');
+    if (colonIndex === -1)
+        return line;
+    return line.slice(colonIndex + 1).trim();
 }
 // TODO: ローカライズ対応、IDをスキップする https://naninovel.com/ja/guide/localization#%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%A9%E3%82%A4%E3%82%B9%E3%82%99
 /**
