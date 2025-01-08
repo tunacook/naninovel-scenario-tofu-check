@@ -54,9 +54,6 @@ function checkScenarioContent(fullPath: string, characterContent: string): Array
       // ディレクトリの中の各エントリ
       if (entry.isFile()) {
         const filePath = path.join(fullPath, entry.name)
-        // const content = fs.readFileSync(filePath, 'utf-8');
-        // core.info(`[File: ${path.join(fullPath, entry.name)}]`);
-        // core.info(content);
         checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent)
       }
     }
