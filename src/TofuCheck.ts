@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as core from '@actions/core'
-import { isSkipNaninovelSyntax } from './naninovel'
+import { isSkipNaninovelSyntax, trimAuthor } from './naninovel'
 
 interface checkResult {
   isAllIncluded: boolean
@@ -17,7 +17,9 @@ export function checkByLine(lines: string[], fileName: string, characterContent:
     core.info(line)
     core.info('-------')
     if (isSkipNaninovelSyntax(line)) continue
-    for (const char of [...line]) {
+
+    const trimLine = trimAuthor(line)
+    for (const char of [...trimLine]) {
       if (missingChars.includes(char)) continue
       if (!characterContent.includes(char)) {
         missingChars.push(char)
