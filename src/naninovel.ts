@@ -1,3 +1,7 @@
+import * as path from 'path';
+
+const ALLOWED_EXTENSIONS = [".nani"];
+
 // https://naninovel.com/ja/guide/naninovel-scripts
 
 /**
@@ -22,6 +26,12 @@ function isCommandLine(line: string): boolean {
  */
 function isCommentLine(line: string): boolean {
   return line.trimStart().startsWith(';')
+}
+
+export function isExtNani(fullPath: string): boolean {
+  return ALLOWED_EXTENSIONS.includes(
+    path.extname(fullPath).toLowerCase()
+  );
 }
 
 /**

@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as core from '@actions/core'
-import { isSkipNaninovelSyntax, trimAuthor } from './naninovel'
+import { isSkipNaninovelSyntax, trimAuthor, isExtNani } from './naninovel'
 
 interface checkResult {
   isAllIncluded: boolean
@@ -43,6 +43,7 @@ function checkScenarioContent(fullPath: string, characterContent: string): Array
   // TODO: coreでない方法でログを出す
 
   if (stats.isFile()) {
+    if (!isExtNani(fullPath)) return []
     // ファイルなら1つだけ読む
     core.info(`'${fullPath}' is a file, reading content...`)
     checkByLine(fs.readFileSync(fullPath, 'utf-8').split(/\r?\n/), fullPath, characterContent)
@@ -53,6 +54,7 @@ function checkScenarioContent(fullPath: string, characterContent: string): Array
     for (const entry of entries) {
       // ディレクトリの中の各エントリ
       if (entry.isFile()) {
+        if (!isExtNani(fullPath)) continue
         const filePath = path.join(fullPath, entry.name)
         checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent)
       }
