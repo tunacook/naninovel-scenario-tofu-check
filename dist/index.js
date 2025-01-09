@@ -25654,7 +25654,7 @@ function checkByLine(lines, fileName, characterContent) {
             continue;
         if ((0, naninovel_1.isSkipNaninovelSyntax)(line))
             continue;
-        const trimLine = (0, naninovel_1.trimAuthor)(line);
+        const trimLine = (0, naninovel_1.trimRuby)((0, naninovel_1.trimBracket)((0, naninovel_1.trimSquareBrackets)((0, naninovel_1.trimAuthor)(line))));
         for (const char of [...trimLine]) {
             if (missingChars.includes(char))
                 continue;
@@ -25751,6 +25751,9 @@ function doTofuCheck(charactersFilePath, scenarioFileDirectoryPath) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.isExtNani = isExtNani;
 exports.trimAuthor = trimAuthor;
+exports.trimBracket = trimBracket;
+exports.trimSquareBrackets = trimSquareBrackets;
+exports.trimRuby = trimRuby;
 exports.isSkipNaninovelSyntax = isSkipNaninovelSyntax;
 const path = __nccwpck_require__(6928);
 const ALLOWED_EXTENSIONS = ['.nani'];
@@ -25788,6 +25791,28 @@ function trimAuthor(line) {
     if (colonIndex === -1)
         return line;
     return line.slice(colonIndex + 1).trim();
+}
+function trimBracket(line) {
+    return line.replace(/<[^>]*>/g, '');
+}
+function trimSquareBrackets(line) {
+    // /\[.*?\]/g は、[ から始まり ] で終わるまでのあらゆる文字列を
+    // 「非貪欲（最短マッチ）*?」で検索し、見つかった部分を一括で削除します
+    return line.replace(/\[.*?\]/g, '');
+}
+function trimRuby(line) {
+    // 正規表現で <ruby="...">...</ruby> を検出
+    // キャプチャ:
+    //   group1 -> ルビ ("・"など)
+    //   group2 -> タグ内の文字 ("彼"など)
+    const regex = /<ruby="([^"]*)">(.*?)<\/ruby>/g;
+    // 置換ロジック:
+    //   - group2(ベース文字) + 改行 + group1(ルビ)
+    return line.replace(regex, (_match, rubyValue, baseText) => {
+        // 好みに応じて結合の仕方を変えてOK
+        // ここでは改行区切りにしている
+        return `${baseText}${rubyValue}`;
+    });
 }
 /**
  * Naninovelの構文であるかどうか Naninovel構文であればスキップする
