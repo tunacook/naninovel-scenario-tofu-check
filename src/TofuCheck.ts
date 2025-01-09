@@ -1,7 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as core from '@actions/core'
-import { isSkipNaninovelSyntax, trimAuthor, isExtNani } from './naninovel'
+import { isSkipNaninovelSyntax, trimAuthor, isExtNani, trimRuby, trimBracket, trimSquareBrackets } from './naninovel'
 
 interface checkResult {
   isAllIncluded: boolean
@@ -13,7 +13,7 @@ export function checkByLine(lines: string[], fileName: string, characterContent:
   for (const line of lines) {
     if (!line) continue
     if (isSkipNaninovelSyntax(line)) continue
-    const trimLine = trimAuthor(line)
+    const trimLine = trimRuby(trimBracket(trimSquareBrackets(trimAuthor(line))))
     for (const char of [...trimLine]) {
       if (missingChars.includes(char)) continue
       if (!characterContent.includes(char)) {
