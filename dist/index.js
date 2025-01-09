@@ -25694,9 +25694,9 @@ function checkScenarioContent(fullPath, characterContent) {
         for (const entry of entries) {
             // ディレクトリの中の各エントリ
             if (entry.isFile()) {
-                if (!(0, naninovel_1.isExtNani)(fullPath))
-                    continue;
                 const filePath = path.join(fullPath, entry.name);
+                if (!(0, naninovel_1.isExtNani)(filePath))
+                    continue;
                 checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent);
             }
         }
