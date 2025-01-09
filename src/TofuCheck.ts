@@ -54,8 +54,8 @@ function checkScenarioContent(fullPath: string, characterContent: string): Array
     for (const entry of entries) {
       // ディレクトリの中の各エントリ
       if (entry.isFile()) {
-        if (!isExtNani(fullPath)) continue
         const filePath = path.join(fullPath, entry.name)
+        if (!isExtNani(filePath)) continue
         checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent)
       }
     }
