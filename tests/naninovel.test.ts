@@ -1,4 +1,4 @@
-import { isExtNani, trimAuthor } from '../src/naninovel'
+import { isExtNani, trimAuthor, trimBracket, trimSquareBrackets, trimRuby } from '../src/naninovel'
 
 describe('trimAuthor test', () => {
   test('セリフの場合は話者IDを除外して返す', async () => {
@@ -31,5 +31,26 @@ describe('isExtNani test', () => {
     const filePath = 'hoge/huga'
     const res = isExtNani(filePath)
     expect(res).toBe(false)
+  })
+})
+
+describe('trimBracket test', () => {
+  test('<br>をトリミングする', async () => {
+    const res = trimBracket('<br>')
+    expect(res).toBe('')
+  })
+})
+
+describe('trimSquareBrackets test', () => {
+  test('[br]をトリミングする', async () => {
+    const res = trimSquareBrackets('[br]')
+    expect(res).toBe('')
+  })
+})
+
+describe('trimRuby test', () => {
+  test('rubyタグをトリミングする', async () => {
+    const res = trimRuby('<ruby="・">彼</ruby><ruby="・">女</ruby>')
+    expect(res).toBe('彼・女・')
   })
 })
