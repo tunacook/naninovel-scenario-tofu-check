@@ -25652,9 +25652,6 @@ function checkByLine(lines, fileName, characterContent) {
     for (const line of lines) {
         if (!line)
             continue;
-        core.info('-------');
-        core.info(line);
-        core.info('-------');
         if ((0, naninovel_1.isSkipNaninovelSyntax)(line))
             continue;
         const trimLine = (0, naninovel_1.trimAuthor)(line);
@@ -25692,11 +25689,16 @@ function checkScenarioContent(fullPath, characterContent) {
         core.info(`'${fullPath}' is a directory, reading all files...`);
         const entries = fs.readdirSync(fullPath, { withFileTypes: true });
         for (const entry of entries) {
-            // ディレクトリの中の各エントリ
-            if (entry.isFile()) {
-                const filePath = path.join(fullPath, entry.name);
+            const filePath = path.join(fullPath, entry.name);
+            if (entry.isDirectory()) {
+                // ディレクトリの場合は再帰呼び出し
+                core.info(`${filePath}' is a directory, reading all files...`);
+                checkScenarioContent(filePath, characterContent);
+            }
+            else if (entry.isFile()) {
                 if (!(0, naninovel_1.isExtNani)(filePath))
                     continue;
+                core.info(`${filePath}' is a directory, reading all files...`);
                 checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent);
             }
         }
