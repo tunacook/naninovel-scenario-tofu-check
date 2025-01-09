@@ -10,37 +10,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Test Actions (directory)
-        uses: tunacook/naninovel-atlas-tofu-check@v0.0.0
+        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
         with:
           charactersFilePath: "fixtures/characters/characters.txt"
           scenarioFileDirectoryPath: "fixtures/scenarios"
 
       - name: Test Actions (file and directory1)
-        uses: tunacook/naninovel-atlas-tofu-check@v0.0.0
+        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
         with:
           charactersFilePath: "fixtures/characters/characters.txt"
           scenarioFileDirectoryPath: "fixtures/scenarios/scenario002.nani"
 
       - name: Test Actions (file and directory2)
-        uses: tunacook/naninovel-atlas-tofu-check@v0.0.0
+        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
         with:
           charactersFilePath: "fixtures/characters/characters.txt"
           scenarioFileDirectoryPath: "fixtures/scenarios"
 
       - name: Test Actions (characters not found)
-        uses: tunacook/naninovel-atlas-tofu-check@v0.0.0
+        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
         with:
           charactersFilePath: "fixtures/characters/characters2.txt"
           scenarioFileDirectoryPath: "fixtures/scenarios"
 
       - name: Test Actions (scenario not found)
-        uses: tunacook/naninovel-atlas-tofu-check@v0.0.0
+        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
         with:
           charactersFilePath: "fixtures/characters/characters2.txt"
           scenarioFileDirectoryPath: "fixtures/scenarios/scenario003.nani"
 
       - name: Test Actions (Illegal extension)
-        uses: tunacook/naninovel-atlas-tofu-check@v0.0.0
+        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
         with:
           charactersFilePath: "fixtures/characters/characters2.txt"
           scenarioFileDirectoryPath: "fixtures/scenarios/scenario002.txt"
