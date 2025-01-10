@@ -4,6 +4,8 @@ name: Build and commit artifacts on PR merge
 
 on:
   pull_request:
+    paths:
+      - "src/**"
     types: [closed]
 
 jobs:
