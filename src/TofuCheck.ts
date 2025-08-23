@@ -150,7 +150,11 @@ function generateCharacterContentFromUnicodeRange(unicodeRangeHex: string): stri
   return characters
 }
 
-export function doTofuCheck(charactersFilePath: string, unicodeRangeHex: string, scenarioFileDirectoryPath: string): string {
+export function doTofuCheck(
+  charactersFilePath: string,
+  unicodeRangeHex: string,
+  scenarioFileDirectoryPath: string,
+): string {
   const workspace = process.env.GITHUB_WORKSPACE || ''
   const scenarioFileDirectoryFullPath = path.join(workspace, scenarioFileDirectoryPath)
 
