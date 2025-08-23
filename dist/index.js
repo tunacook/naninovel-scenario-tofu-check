@@ -3195,6 +3195,94 @@ function copyFile(srcFile, destFile, force) {
 
 /***/ }),
 
+/***/ 2183:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/index.ts
+var index_exports = {};
+__export(index_exports, {
+  isExtNani: () => isExtNani,
+  isSkipNaninovelSyntax: () => isSkipNaninovelSyntax,
+  trimAuthor: () => trimAuthor,
+  trimBracket: () => trimBracket,
+  trimRuby: () => trimRuby,
+  trimSquareBrackets: () => trimSquareBrackets
+});
+module.exports = __toCommonJS(index_exports);
+
+// src/naninovel.ts
+var path = __toESM(__nccwpck_require__(6928));
+var ALLOWED_EXTENSIONS = [".nani"];
+function isLabelLine(line) {
+  return line.trimStart().startsWith("#");
+}
+function isCommandLine(line) {
+  return line.trimStart().startsWith("@");
+}
+function isCommentLine(line) {
+  return line.trimStart().startsWith(";");
+}
+function isExtNani(fullPath) {
+  return ALLOWED_EXTENSIONS.includes(path.extname(fullPath).toLowerCase());
+}
+function trimAuthor(line) {
+  const colonIndex = line.indexOf(":");
+  if (colonIndex === -1) return line;
+  return line.slice(colonIndex + 1).trim();
+}
+function trimBracket(line) {
+  return line.replace(/<[^>]*>/g, "");
+}
+function trimSquareBrackets(line) {
+  return line.replace(/\[.*?\]/g, "");
+}
+function trimRuby(line) {
+  const regex = /<ruby="([^"]*)">(.*?)<\/ruby>/g;
+  return line.replace(regex, (_match, rubyValue, baseText) => {
+    return `${baseText}${rubyValue}`;
+  });
+}
+function isSkipNaninovelSyntax(line) {
+  if (isCommandLine(line)) return true;
+  if (isCommentLine(line)) return true;
+  return isLabelLine(line);
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (0);
+
+
+/***/ }),
+
 /***/ 770:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -8803,7 +8891,7 @@ module.exports = {
 
 
 const { parseSetCookie } = __nccwpck_require__(8915)
-const { stringify, getHeadersList } = __nccwpck_require__(3834)
+const { stringify } = __nccwpck_require__(3834)
 const { webidl } = __nccwpck_require__(4222)
 const { Headers } = __nccwpck_require__(6349)
 
@@ -8879,14 +8967,13 @@ function getSetCookies (headers) {
 
   webidl.brandCheck(headers, Headers, { strict: false })
 
-  const cookies = getHeadersList(headers).cookies
+  const cookies = headers.getSetCookie()
 
   if (!cookies) {
     return []
   }
 
-  // In older versions of undici, cookies is a list of name:value.
-  return cookies.map((pair) => parseSetCookie(Array.isArray(pair) ? pair[1] : pair))
+  return cookies.map((pair) => parseSetCookie(pair))
 }
 
 /**
@@ -9314,14 +9401,15 @@ module.exports = {
 /***/ }),
 
 /***/ 3834:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ ((module) => {
 
 "use strict";
 
 
-const assert = __nccwpck_require__(2613)
-const { kHeadersList } = __nccwpck_require__(6443)
-
+/**
+ * @param {string} value
+ * @returns {boolean}
+ */
 function isCTLExcludingHtab (value) {
   if (value.length === 0) {
     return false
@@ -9582,31 +9670,13 @@ function stringify (cookie) {
   return out.join('; ')
 }
 
-let kHeadersListNode
-
-function getHeadersList (headers) {
-  if (headers[kHeadersList]) {
-    return headers[kHeadersList]
-  }
-
-  if (!kHeadersListNode) {
-    kHeadersListNode = Object.getOwnPropertySymbols(headers).find(
-      (symbol) => symbol.description === 'headers list'
-    )
-
-    assert(kHeadersListNode, 'Headers cannot be parsed')
-  }
-
-  const headersList = headers[kHeadersListNode]
-  assert(headersList)
-
-  return headersList
-}
-
 module.exports = {
   isCTLExcludingHtab,
-  stringify,
-  getHeadersList
+  validateCookieName,
+  validateCookiePath,
+  validateCookieValue,
+  toIMFDate,
+  stringify
 }
 
 
@@ -11535,6 +11605,14 @@ const { isUint8Array, isArrayBuffer } = __nccwpck_require__(8253)
 const { File: UndiciFile } = __nccwpck_require__(3041)
 const { parseMIMEType, serializeAMimeType } = __nccwpck_require__(4322)
 
+let random
+try {
+  const crypto = __nccwpck_require__(7598)
+  random = (max) => crypto.randomInt(0, max)
+} catch {
+  random = (max) => Math.floor(Math.random(max))
+}
+
 let ReadableStream = globalThis.ReadableStream
 
 /** @type {globalThis['File']} */
@@ -11620,7 +11698,7 @@ function extractBody (object, keepalive = false) {
     // Set source to a copy of the bytes held by object.
     source = new Uint8Array(object.buffer.slice(object.byteOffset, object.byteOffset + object.byteLength))
   } else if (util.isFormDataLike(object)) {
-    const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, '0')}`
+    const boundary = `----formdata-undici-0${`${random(1e11)}`.padStart(11, '0')}`
     const prefix = `--${boundary}\r\nContent-Disposition: form-data`
 
     /*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
@@ -13602,6 +13680,7 @@ const {
   isValidHeaderName,
   isValidHeaderValue
 } = __nccwpck_require__(5523)
+const util = __nccwpck_require__(9023)
 const { webidl } = __nccwpck_require__(4222)
 const assert = __nccwpck_require__(2613)
 
@@ -14155,6 +14234,9 @@ Object.defineProperties(Headers.prototype, {
   [Symbol.toStringTag]: {
     value: 'Headers',
     configurable: true
+  },
+  [util.inspect.custom]: {
+    enumerable: false
   }
 })
 
@@ -23331,6 +23413,20 @@ class Pool extends PoolBase {
       ? { ...options.interceptors }
       : undefined
     this[kFactory] = factory
+
+    this.on('connectionError', (origin, targets, error) => {
+      // If a connection error occurs, we remove the client from the pool,
+      // and emit a connectionError event. They will not be re-used.
+      // Fixes https://github.com/nodejs/undici/issues/3895
+      for (const target of targets) {
+        // Do not use kRemoveClient here, as it will close the client,
+        // but the client cannot be closed in this state.
+        const idx = this[kClients].indexOf(target)
+        if (idx !== -1) {
+          this[kClients].splice(idx, 1)
+        }
+      }
+    })
   }
 
   [kGetDispatcher] () {
@@ -25646,15 +25742,15 @@ exports.doTofuCheck = doTofuCheck;
 const fs = __nccwpck_require__(9896);
 const path = __nccwpck_require__(6928);
 const core = __nccwpck_require__(7484);
-const naninovel_1 = __nccwpck_require__(7153);
+const naninovel_script_spec_1 = __nccwpck_require__(2183);
 function checkByLine(lines, fileName, characterContent) {
     const missingChars = [];
     for (const line of lines) {
         if (!line)
             continue;
-        if ((0, naninovel_1.isSkipNaninovelSyntax)(line))
+        if ((0, naninovel_script_spec_1.isSkipNaninovelSyntax)(line))
             continue;
-        const trimLine = (0, naninovel_1.trimRuby)((0, naninovel_1.trimBracket)((0, naninovel_1.trimSquareBrackets)((0, naninovel_1.trimAuthor)(line))));
+        const trimLine = (0, naninovel_script_spec_1.trimRuby)((0, naninovel_script_spec_1.trimBracket)((0, naninovel_script_spec_1.trimSquareBrackets)((0, naninovel_script_spec_1.trimAuthor)(line))));
         for (const char of [...trimLine]) {
             if (missingChars.includes(char))
                 continue;
@@ -25678,7 +25774,7 @@ function checkScenarioContent(fullPath, characterContent) {
     const stats = fs.statSync(fullPath);
     // TODO: coreでない方法でログを出す
     if (stats.isFile()) {
-        if (!(0, naninovel_1.isExtNani)(fullPath))
+        if (!(0, naninovel_script_spec_1.isExtNani)(fullPath))
             return [];
         // ファイルなら1つだけ読む
         core.info(`'${fullPath}' is a file, reading content...`);
@@ -25696,7 +25792,7 @@ function checkScenarioContent(fullPath, characterContent) {
                 checkScenarioContent(filePath, characterContent);
             }
             else if (entry.isFile()) {
-                if (!(0, naninovel_1.isExtNani)(filePath))
+                if (!(0, naninovel_script_spec_1.isExtNani)(filePath))
                     continue;
                 core.info(`${filePath}' is a directory, reading all files...`);
                 checkByLine(fs.readFileSync(filePath, 'utf-8').split(/\r?\n/), filePath, characterContent);
@@ -25738,91 +25834,6 @@ function doTofuCheck(charactersFilePath, scenarioFileDirectoryPath) {
     checkScenarioContent(scenarioFileDirectoryFullPath, characterContent);
     // TODO: 結果をスタックしてまとめてresultとして出すようにする
     return `doTofuCheck charactersFilePath:${charactersFilePath} scenarioFileDirectoryPath:${scenarioFileDirectoryPath} `;
-}
-
-
-/***/ }),
-
-/***/ 7153:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isExtNani = isExtNani;
-exports.trimAuthor = trimAuthor;
-exports.trimBracket = trimBracket;
-exports.trimSquareBrackets = trimSquareBrackets;
-exports.trimRuby = trimRuby;
-exports.isSkipNaninovelSyntax = isSkipNaninovelSyntax;
-const path = __nccwpck_require__(6928);
-const ALLOWED_EXTENSIONS = ['.nani'];
-// https://naninovel.com/ja/guide/naninovel-scripts
-/**
- * Naninovelのラベル構文であるかどうか
- * @param line
- */
-function isLabelLine(line) {
-    return line.trimStart().startsWith('#');
-}
-/**
- * Naninovelのスクリプト構文であるかどうか
- * @param line
- */
-function isCommandLine(line) {
-    return line.trimStart().startsWith('@');
-}
-/**
- * Naninovelのコメント構文であるかどうか
- * @param line
- */
-function isCommentLine(line) {
-    return line.trimStart().startsWith(';');
-}
-function isExtNani(fullPath) {
-    return ALLOWED_EXTENSIONS.includes(path.extname(fullPath).toLowerCase());
-}
-/**
- * セリフ構文の場合に話者IDを除外してセリフ文章だけを返す セリフ構文でない場合はなにもしない
- * @param line
- */
-function trimAuthor(line) {
-    const colonIndex = line.indexOf(':');
-    if (colonIndex === -1)
-        return line;
-    return line.slice(colonIndex + 1).trim();
-}
-function trimBracket(line) {
-    return line.replace(/<[^>]*>/g, '');
-}
-function trimSquareBrackets(line) {
-    // /\[.*?\]/g は、[ から始まり ] で終わるまでのあらゆる文字列を
-    // 「非貪欲（最短マッチ）*?」で検索し、見つかった部分を一括で削除します
-    return line.replace(/\[.*?\]/g, '');
-}
-function trimRuby(line) {
-    // 正規表現で <ruby="...">...</ruby> を検出
-    // キャプチャ:
-    //   group1 -> ルビ ("・"など)
-    //   group2 -> タグ内の文字 ("彼"など)
-    const regex = /<ruby="([^"]*)">(.*?)<\/ruby>/g;
-    // 置換ロジック:
-    //   - group2(ベース文字) + 改行 + group1(ルビ)
-    return line.replace(regex, (_match, rubyValue, baseText) => {
-        // 好みに応じて結合の仕方を変えてOK
-        // ここでは改行区切りにしている
-        return `${baseText}${rubyValue}`;
-    });
-}
-/**
- * Naninovelの構文であるかどうか Naninovel構文であればスキップする
- */
-function isSkipNaninovelSyntax(line) {
-    if (isCommandLine(line))
-        return true;
-    if (isCommentLine(line))
-        return true;
-    return isLabelLine(line);
 }
 
 
@@ -25929,6 +25940,14 @@ module.exports = require("https");
 
 "use strict";
 module.exports = require("net");
+
+/***/ }),
+
+/***/ 7598:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:crypto");
 
 /***/ }),
 
