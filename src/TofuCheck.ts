@@ -96,15 +96,83 @@ function readCharacterContent(fullPath: string): string {
   }
 }
 
-export function doTofuCheck(charactersFilePath: string, scenarioFileDirectoryPath: string): string {
+/**
+ * Unicode範囲から文字列を生成する
+ * @param unicodeRangeHex "20-7E,3040-309F,30A0-30FF" 形式のUnicode範囲指定
+ * @returns 範囲内のすべての文字を含む文字列
+ */
+function generateCharacterContentFromUnicodeRange(unicodeRangeHex: string): string {
+  const ranges = unicodeRangeHex.split(',')
+  let characters = ''
+
+  for (const range of ranges) {
+    const trimmedRange = range.trim()
+    if (trimmedRange.includes('-')) {
+      // 範囲指定 (例: 20-7E)
+      const parts = trimmedRange.split('-')
+
+      if (parts.length !== 2 || !parts[0] || !parts[1]) {
+        core.warning(`Invalid Unicode range format: ${trimmedRange}. Expected format: START-END`)
+        continue
+      }
+
+      const startHex = parts[0].trim()
+      const endHex = parts[1].trim()
+      const start = parseInt(startHex, 16)
+      const end = parseInt(endHex, 16)
+      if (isNaN(start) || isNaN(end)) {
+        core.warning(`Invalid hexadecimal values in range: ${trimmedRange}`)
+        continue
+      }
+      if (start > end) {
+        core.warning(`Invalid range: start (${startHex}) is greater than end (${endHex})`)
+        continue
+      }
+
+      core.info(`Processing Unicode range: U+${startHex.toUpperCase()} - U+${endHex.toUpperCase()} (${start} - ${end})`)
+
+      for (let codePoint = start; codePoint <= end; codePoint++) {
+        characters += String.fromCharCode(codePoint)
+      }
+    } else {
+      // 単一文字指定 (例: 3042)
+      const codePoint = parseInt(trimmedRange, 16)
+      if (isNaN(codePoint)) {
+        core.warning(`Invalid hexadecimal value: ${trimmedRange}`)
+        continue
+      }
+      core.info(`Processing single Unicode: U+${trimmedRange.toUpperCase()} (${codePoint})`)
+      characters += String.fromCharCode(codePoint)
+    }
+  }
+
+  core.info(`Generated ${characters.length} characters from Unicode ranges`)
+  return characters
+}
+
+export function doTofuCheck(
+  charactersFilePath: string,
+  unicodeRangeHex: string,
+  scenarioFileDirectoryPath: string,
+): string {
   const workspace = process.env.GITHUB_WORKSPACE || ''
-  const charactersFileFullPath = path.join(workspace, charactersFilePath)
   const scenarioFileDirectoryFullPath = path.join(workspace, scenarioFileDirectoryPath)
 
-  const characterContent = readCharacterContent(charactersFileFullPath)
+  let characterContent: string
+  if (charactersFilePath) {
+    // ファイルから読み込み
+    const charactersFileFullPath = path.join(workspace, charactersFilePath)
+    characterContent = readCharacterContent(charactersFileFullPath)
+    core.info('Using characters from file')
+  } else {
+    // Unicode範囲から生成
+    characterContent = generateCharacterContentFromUnicodeRange(unicodeRangeHex)
+    core.info('Using characters from Unicode range')
+  }
+
   checkScenarioContent(scenarioFileDirectoryFullPath, characterContent)
 
   // TODO: 結果をスタックしてまとめてresultとして出すようにする
 
-  return `doTofuCheck charactersFilePath:${charactersFilePath} scenarioFileDirectoryPath:${scenarioFileDirectoryPath} `
+  return `doTofuCheck charactersFilePath:${charactersFilePath} unicodeRangeHex:${unicodeRangeHex} scenarioFileDirectoryPath:${scenarioFileDirectoryPath} `
 }
