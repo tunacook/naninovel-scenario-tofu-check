@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "naninovel-script-spec": "git+ssh://git@github.com/tunacook/naninovel-script-spec.git#latest",
+    "naninovel-script-spec": "github:tunacook/naninovel-script-spec#latest",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
