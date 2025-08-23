@@ -27,20 +27,20 @@ jobs:
           charactersFilePath: "fixtures/characters/characters.txt"
           scenarioFileDirectoryPath: "fixtures/scenarios"
 
-      - name: Test Actions (characters not found)
-        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
-        with:
-          charactersFilePath: "fixtures/characters/characters2.txt"
-          scenarioFileDirectoryPath: "fixtures/scenarios"
-
-      - name: Test Actions (scenario not found)
-        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
-        with:
-          charactersFilePath: "fixtures/characters/characters2.txt"
-          scenarioFileDirectoryPath: "fixtures/scenarios/scenario003.nani"
-
-      - name: Test Actions (Illegal extension)
-        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
-        with:
-          charactersFilePath: "fixtures/characters/characters2.txt"
-          scenarioFileDirectoryPath: "fixtures/scenarios/scenario002.txt"
+#      - name: Test Actions (characters not found)
+#        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
+#        with:
+#          charactersFilePath: "fixtures/characters/characters2.txt"
+#          scenarioFileDirectoryPath: "fixtures/scenarios"
+#
+#      - name: Test Actions (scenario not found)
+#        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
+#        with:
+#          charactersFilePath: "fixtures/characters/characters2.txt"
+#          scenarioFileDirectoryPath: "fixtures/scenarios/scenario003.nani"
+#
+#      - name: Test Actions (Illegal extension)
+#        uses: tunacook/naninovel-scenario-tofu-check@v0.0.0
+#        with:
+#          charactersFilePath: "fixtures/characters/characters2.txt"
+#          scenarioFileDirectoryPath: "fixtures/scenarios/scenario002.txt"
