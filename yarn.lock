@@ -2248,9 +2248,9 @@ ms@^2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-"naninovel-script-spec@git+ssh://git@github.com/tunacook/naninovel-script-spec.git#v0.1.3":
+"naninovel-script-spec@git+ssh://git@github.com/tunacook/naninovel-script-spec.git#latest":
   version "0.1.3"
-  resolved "git+ssh://git@github.com/tunacook/naninovel-script-spec.git#f3cf873c1f84cfe116775e1e4f97b74aca3948ff"
+  resolved "git+ssh://git@github.com/tunacook/naninovel-script-spec.git#2cd7bb861740af438fc0a11fdb44fe8f6ba7dd4d"
   dependencies:
     typescript "^5.9.2"
 
