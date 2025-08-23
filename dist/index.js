@@ -25751,6 +25751,7 @@ function checkByLine(lines, fileName, characterContent) {
         if ((0, naninovel_script_spec_1.isSkipNaninovelSyntax)(line))
             continue;
         const trimLine = (0, naninovel_script_spec_1.trimRuby)((0, naninovel_script_spec_1.trimBracket)((0, naninovel_script_spec_1.trimSquareBrackets)((0, naninovel_script_spec_1.trimAuthor)(line))));
+        core.info(trimLine);
         for (const char of [...trimLine]) {
             if (missingChars.includes(char))
                 continue;
