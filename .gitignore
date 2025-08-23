@@ -24,3 +24,5 @@ node_modules/
 .idea/**/tasks.xml
 
 *Thumbs.db*
+.DS_Store
+.idea/
