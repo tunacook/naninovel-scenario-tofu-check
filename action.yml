@@ -2,8 +2,12 @@ name: 'tofu check'
 description: 'NaninovelのシナリオファイルにおいてTextMeshProのFontAtlasに含まれていない文字があるかどうかチェックする'
 inputs:
   charactersFilePath:
-    description: 'atlas characters file path'
-    required: true
+    description: 'atlas characters file path (charactersFilePathとunicodeRangeHexのどちらか一つを指定)'
+    required: false
+    default: ""
+  unicodeRangeHex:
+    description: 'Unity Unicode Range Hex (例: 20-7E,3040-309F,30A0-30FF) (charactersFilePathとunicodeRangeHexのどちらか一つを指定)'
+    required: false
     default: ""
   scenarioFileDirectoryPath:
     description: 'scenario file directory path'
