@@ -1,7 +1,14 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as core from '@actions/core'
-import { isSkipNaninovelSyntax, trimAuthor, isExtNani, trimRuby, trimBracket, trimSquareBrackets } from './naninovel'
+import {
+  isSkipNaninovelSyntax,
+  trimAuthor,
+  isExtNani,
+  trimRuby,
+  trimBracket,
+  trimSquareBrackets,
+} from 'naninovel-script-spec'
 
 interface checkResult {
   isAllIncluded: boolean
