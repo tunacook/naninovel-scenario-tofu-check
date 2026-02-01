@@ -15,7 +15,7 @@
   "author": "tunacook <tunacook0704@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^2.0.1",
+    "@actions/core": "^3.0.0",
     "naninovel-script-spec": "github:tunacook/naninovel-script-spec#latest",
     "typescript": "^5.9.3"
   },
