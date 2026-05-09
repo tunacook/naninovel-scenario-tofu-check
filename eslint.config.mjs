@@ -17,6 +17,10 @@ export default [
         "jest.config.js"
     ]
   },
+  {
+    files: ["__mocks__/**/*.js"],
+    languageOptions: { globals: globals.node }
+  },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
 ];
