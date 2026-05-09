@@ -50,4 +50,22 @@ describe('checkByLine with curly braces', () => {
     const res = () => checkByLine(['{xyz}b'], 'filename', characterContent)
     expect(res).toThrow(new Error('ERROR: Not found characters:\n b'))
   })
+
+  test('{}除去後に空文字になった行はスキップする', async () => {
+    const characterContent = 'adf'
+    const res = checkByLine(['{xyz}'], 'filename', characterContent)
+    expect(res.isAllIncluded).toBe(true)
+  })
+
+  test('{}除去後に空白のみになった行はスキップする', async () => {
+    const characterContent = 'adf'
+    const res = checkByLine(['  {xyz}  '], 'filename', characterContent)
+    expect(res.isAllIncluded).toBe(true)
+  })
+
+  test('複数の変数展開のみの行はスキップする', async () => {
+    const characterContent = 'adf'
+    const res = checkByLine(['{var1}{var2}'], 'filename', characterContent)
+    expect(res.isAllIncluded).toBe(true)
+  })
 })
