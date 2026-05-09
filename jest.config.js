@@ -4,4 +4,7 @@ module.exports = {
   transform: {
     '^.+.tsx?$': ['ts-jest', { tsconfig: 'tsconfig.test.json' }],
   },
+  moduleNameMapper: {
+    '^@actions/core$': '<rootDir>/__mocks__/@actions/core.js',
+  },
 }
