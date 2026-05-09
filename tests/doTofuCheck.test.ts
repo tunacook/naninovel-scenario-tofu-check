@@ -68,4 +68,10 @@ describe('checkByLine with curly braces', () => {
     const res = checkByLine(['{var1}{var2}'], 'filename', characterContent)
     expect(res.isAllIncluded).toBe(true)
   })
+
+  test('セリフ途中に変数展開が含まれる行 - かをり: {LEVEL_...}なんかどう？ パターン', async () => {
+    const characterContent = 'かをりなんどう？ :'
+    const res = checkByLine(['かをり: {LEVEL_the_place_used_with_rachel_1_SELECTED}なんかどう？'], 'filename', characterContent)
+    expect(res.isAllIncluded).toBe(true)
+  })
 })
