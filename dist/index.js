@@ -25737,12 +25737,16 @@ module.exports = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.trimCurlyBraces = trimCurlyBraces;
 exports.checkByLine = checkByLine;
 exports.doTofuCheck = doTofuCheck;
 const fs = __nccwpck_require__(9896);
 const path = __nccwpck_require__(6928);
 const core = __nccwpck_require__(7484);
 const naninovel_script_spec_1 = __nccwpck_require__(2183);
+function trimCurlyBraces(line) {
+    return line.replace(/\{[^}]*\}/g, '');
+}
 function checkByLine(lines, fileName, characterContent) {
     const missingChars = [];
     for (const line of lines) {
@@ -25750,7 +25754,10 @@ function checkByLine(lines, fileName, characterContent) {
             continue;
         if ((0, naninovel_script_spec_1.isSkipNaninovelSyntax)(line))
             continue;
-        const trimLine = (0, naninovel_script_spec_1.trimRuby)((0, naninovel_script_spec_1.trimBracket)((0, naninovel_script_spec_1.trimSquareBrackets)((0, naninovel_script_spec_1.trimAuthor)(line))));
+        const afterCurlyTrim = trimCurlyBraces(line);
+        if (!afterCurlyTrim.trim())
+            continue;
+        const trimLine = (0, naninovel_script_spec_1.trimRuby)((0, naninovel_script_spec_1.trimBracket)((0, naninovel_script_spec_1.trimSquareBrackets)((0, naninovel_script_spec_1.trimAuthor)(afterCurlyTrim))));
         core.info(trimLine);
         for (const char of [...trimLine]) {
             if (missingChars.includes(char))

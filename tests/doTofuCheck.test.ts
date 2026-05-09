@@ -69,9 +69,21 @@ describe('checkByLine with curly braces', () => {
     expect(res.isAllIncluded).toBe(true)
   })
 
-  test('セリフ途中に変数展開が含まれる行 - かをり: {LEVEL_...}なんかどう？ パターン', async () => {
+  test('著者名あり - かをり: {LEVEL_...}なんかどう？ パターン', async () => {
     const characterContent = 'かをりなんどう？ :'
     const res = checkByLine(['かをり: {LEVEL_the_place_used_with_rachel_1_SELECTED}なんかどう？'], 'filename', characterContent)
+    expect(res.isAllIncluded).toBe(true)
+  })
+
+  test('著者名なし - 行頭に変数展開 {LEVEL_...}なんかどう？ パターン', async () => {
+    const characterContent = 'なんかどう？'
+    const res = checkByLine(['{LEVEL_the_place_used_with_rachel_1_SELECTED}なんかどう？'], 'filename', characterContent)
+    expect(res.isAllIncluded).toBe(true)
+  })
+
+  test('著者名なし - 行中に変数展開 一旦{LEVEL_...}行ってからでいいよ パターン', async () => {
+    const characterContent = '一旦行ってからでいいよ。'
+    const res = checkByLine(['一旦{LEVEL_the_place_used_with_rachel_1_SELECTED}行ってからでいいよ。'], 'filename', characterContent)
     expect(res.isAllIncluded).toBe(true)
   })
 })
