@@ -24,7 +24,9 @@ export function checkByLine(lines: string[], fileName: string, characterContent:
   for (const line of lines) {
     if (!line) continue
     if (isSkipNaninovelSyntax(line)) continue
-    const trimLine = trimRuby(trimBracket(trimSquareBrackets(trimAuthor(trimCurlyBraces(line)))))
+    const afterCurlyTrim = trimCurlyBraces(line)
+    if (!afterCurlyTrim.trim()) continue
+    const trimLine = trimRuby(trimBracket(trimSquareBrackets(trimAuthor(afterCurlyTrim))))
     core.info(trimLine)
     for (const char of [...trimLine]) {
       if (missingChars.includes(char)) continue
