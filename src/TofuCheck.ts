@@ -10,6 +10,10 @@ import {
   trimSquareBrackets,
 } from 'naninovel-script-spec'
 
+export function trimCurlyBraces(line: string): string {
+  return line.replace(/\{[^}]*\}/g, '')
+}
+
 interface checkResult {
   isAllIncluded: boolean
   missingChars: string[]
@@ -20,7 +24,7 @@ export function checkByLine(lines: string[], fileName: string, characterContent:
   for (const line of lines) {
     if (!line) continue
     if (isSkipNaninovelSyntax(line)) continue
-    const trimLine = trimRuby(trimBracket(trimSquareBrackets(trimAuthor(line))))
+    const trimLine = trimRuby(trimBracket(trimSquareBrackets(trimAuthor(trimCurlyBraces(line)))))
     core.info(trimLine)
     for (const char of [...trimLine]) {
       if (missingChars.includes(char)) continue
