@@ -18,8 +18,21 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
+      # lockfile が公式レジストリ以外（任意の URL や git リポジトリ）からパッケージを取得するように
+      # 書き換えられていないかを確認する（lockfile injection 対策）
+      # レジストリ以外の取得元は自前の naninovel-script-spec だけを許可する
+      - name: Check lockfile sources
+        run: |
+          bad=$(grep -E '^\s+resolved ' yarn.lock \
+            | grep -vE '^\s+resolved "https://registry\.yarnpkg\.com/' \
+            | grep -vE '^\s+resolved "https://codeload\.github\.com/tunacook/naninovel-script-spec/tar\.gz/[0-9a-f]{40}"$' || true)
+          if [ -n "$bad" ]; then
+            echo "::error file=yarn.lock::公式レジストリ以外から取得するパッケージがあります"
+            echo "$bad"
+            exit 1
+          fi
       - name: Install dependencies
-        run: yarn
+        run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn lint
 
   test:
@@ -32,5 +45,5 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'yarn'
       - name: Install dependencies
-        run: yarn
+        run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn test
