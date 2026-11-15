@@ -1,4 +1,4 @@
-import { checkByLine, trimCurlyBraces } from '../src/TofuCheck'
+import { checkByLine, trimCurlyBraces } from '../src/TofuCheck.js'
 
 describe('checkByLine test', () => {
   test('aが存在するが、bとcが存在しない', async () => {
@@ -71,7 +71,11 @@ describe('checkByLine with curly braces', () => {
 
   test('著者名あり - かをり: {LEVEL_...}なんかどう？ パターン', async () => {
     const characterContent = 'かをりなんどう？ :'
-    const res = checkByLine(['かをり: {LEVEL_the_place_used_with_rachel_1_SELECTED}なんかどう？'], 'filename', characterContent)
+    const res = checkByLine(
+      ['かをり: {LEVEL_the_place_used_with_rachel_1_SELECTED}なんかどう？'],
+      'filename',
+      characterContent,
+    )
     expect(res.isAllIncluded).toBe(true)
   })
 
@@ -83,7 +87,11 @@ describe('checkByLine with curly braces', () => {
 
   test('著者名なし - 行中に変数展開 一旦{LEVEL_...}行ってからでいいよ パターン', async () => {
     const characterContent = '一旦行ってからでいいよ。'
-    const res = checkByLine(['一旦{LEVEL_the_place_used_with_rachel_1_SELECTED}行ってからでいいよ。'], 'filename', characterContent)
+    const res = checkByLine(
+      ['一旦{LEVEL_the_place_used_with_rachel_1_SELECTED}行ってからでいいよ。'],
+      'filename',
+      characterContent,
+    )
     expect(res.isAllIncluded).toBe(true)
   })
 })
