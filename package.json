@@ -2,7 +2,8 @@
   "name": "naninovel-atlas-tofu-check",
   "version": "0.0.0",
   "description": "NaninovelのシナリオファイルにおいてTextMeshProのFontAtlasに含まれていない文字があるかどうかチェックする",
-  "main": "index.ts",
+  "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.ts -o dist",
     "lint": "yarn eslint && yarn prettier",
