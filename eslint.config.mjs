@@ -14,11 +14,11 @@ export default [
   {
     ignores: [
         "dist/*.js",
-        "jest.config.js"
+        "jest.config.cjs"
     ]
   },
   {
-    files: ["__mocks__/**/*.js"],
+    files: ["__mocks__/**/*.cjs", "jest.config.cjs"],
     languageOptions: { globals: globals.node }
   },
   pluginJs.configs.recommended,
