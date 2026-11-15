@@ -19,6 +19,10 @@
     "naninovel-script-spec": "github:tunacook/naninovel-script-spec#latest",
     "typescript": "^6.0.3"
   },
+  "resolutions": {
+    "**/minimatch": "^11.0.1",
+    "**/glob": "^14.0.2"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",

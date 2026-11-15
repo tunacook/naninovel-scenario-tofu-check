@@ -1,0 +1,11 @@
+# OSV-Scanner の除外設定（lockfile と同じディレクトリに置くと自動で読み込まれる）
+# 除外するのは、修正版が存在せず、かつ実際の使われ方では悪用できないものに限る。
+# ignoreUntil を過ぎると再び検出されるので、その時点で修正版が出ていないか見直す。
+
+[[IgnoredVulns]]
+id = "GHSA-gcqx-w48m-w2h4"
+ignoreUntil = 2027-05-15T00:00:00Z
+reason = """
+deepmerge の prototype poisoning（Low）。修正版が存在しない。
+jest の jest-config が設定ファイルのマージにだけ使う開発時の依存で、外部の入力はマージされず、Action の配布物（dist/）にも含まれない。
+"""
